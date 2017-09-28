@@ -1,0 +1,152 @@
+{#Evergreen Tutoring - A simple online tutor scheduling service#}
+{#Copyright (C) 2017 William Reed#}
+{##}
+{#This program is free software: you can redistribute it and/or modify#}
+{#it under the terms of the GNU General Public License as published by#}
+{#the Free Software Foundation, either version 3 of the License, or#}
+{#(at your option) any later version.#}
+{##}
+{#This program is distributed in the hope that it will be useful,#}
+{#but WITHOUT ANY WARRANTY; without even the implied warranty of#}
+{#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the#}
+{#GNU General Public License for more details.#}
+{##}
+{#You should have received a copy of the GNU General Public License#}
+{#along with this program.  If not, see <http://www.gnu.org/licenses/>#}
+
+{% extends 'base.html' %}
+{% block title %}{{ tutor.user.first_name }} {{ tutor.user.last_name }}{% endblock %}
+
+<!-- different cards for different info:
+2.  Bio
+    bio text
+3.  Reviews
+    Average Rating
+    Several recent reviews
+    button to view all ratings
+    (list view / detail view for those as well)
+-->
+{% block content %}
+    <div class="container">
+        {# top row for general info and bio #}
+        <div class="row">
+            {# card one: Pic, Name, Location, Subjects, Uses #}
+            <div class="col-sm-4">
+
+                <div class="card card-flex">
+                    {# tutor picture #}
+                    <img class="img-fluid"
+                         src="{{ tutor.user.profile.picture }}"
+                         alt="{{ tutor.user.name }} picture">
+                    {# Name, Location, Subjects, and Uses #}
+                    <div class="card-block card-block-flex">
+                        <h4 class="card-title">{{ tutor.user.profile.name }}</h4>
+                        {% if request.user == tutor.user %}
+                            <a href="/tutor/edit/" class="btn dark-primary-color ">Edit</a>
+                        {% endif %}
+                        <hr class="hr-flex"/>
+                        <div class="row">
+                            {# row headers #}
+                            <div class="col">
+                                <p class="card-text">
+                                    Location: </br>
+                                    Sessions: </br>
+                                    {# Subject or Subjects? #}
+                                    {% if tutor.subjects|length < 2 %}
+                                        Subjects: </br>
+                                    {% else %}
+                                        Subjects: </br>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            {# row information #}
+                            <div class="col">
+                                <p class="card-text">
+                                    {# Location #}
+                                    {{ tutor.user.profile.city }} </br>
+                                    {# Uses #}
+                                    {{ tutor.sessions }} sessions</br>
+                                    {# Specialty Subjects #}
+                                    {% for subject in tutor.subjects %}
+                                        {{ subject }}
+                                        {# add a comma if they do more than one subject #}
+                                        {% if forloop.counter != tutor.subjects|length %}
+                                            ,
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-sm-8">
+                {# Card two: Bio and text #}
+                <div class="card card-flex">
+
+                    <div class="card-block card-block-flex">
+                        {# Bio title #}
+                        <h4 class="card-title">Biography</h4>
+                        <hr class="hr-flex"/>
+                        <p class="card-text">{{ tutor.bio|linebreaks }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            {# Reviews #}
+            <div class="col">
+                <h4>Reviews
+                    <a class="btn dark-primary-color" href="/tutor/{{ tutor.pk }}/review/">Add Review</a>
+                </h4>
+                {# Review Cards TODO: randomly pick 3 to display #}
+                {% if tutor.reviews.count < 1 %}
+                    <p>There are no reviews for this tutor yet.</p>
+                {% else %}
+                    {% for review in tutor.reviews %}
+                        <br>
+                        {% include "tutor/review_card.html" %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            {# Appointments #}
+            <div class="col">
+                <div class="row">
+                    <div class="col">
+                        <h4>Appointments</h4>
+                    </div>
+                </div>
+                <br>
+                {% if tutor.appointments.count < 1 %}
+                    <p>There are no available appointments for this tutor right now.</p>
+                {% else %}
+                    {# Appointment Table #}
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for app in tutor.appointments %}
+                            <tr>
+                                <td>{{ app.start_time|date:"SHORT_DATE_FORMAT" }}</td>
+                                <td>{{ app.start_time|time }} - {{ app.end_time|time }}</td>
+                                <td><a class="green-text" href="/appointment/{{ app.pk }}"><i
+                                        class="fa fa-calendar-plus-o"></i></a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

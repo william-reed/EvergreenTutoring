@@ -1,0 +1,57 @@
+{#Evergreen Tutoring - A simple online tutor scheduling service#}
+{#Copyright (C) 2017 William Reed#}
+{##}
+{#This program is free software: you can redistribute it and/or modify#}
+{#it under the terms of the GNU General Public License as published by#}
+{#the Free Software Foundation, either version 3 of the License, or#}
+{#(at your option) any later version.#}
+{##}
+{#This program is distributed in the hope that it will be useful,#}
+{#but WITHOUT ANY WARRANTY; without even the implied warranty of#}
+{#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the#}
+{#GNU General Public License for more details.#}
+{##}
+{#You should have received a copy of the GNU General Public License#}
+{#along with this program.  If not, see <http://www.gnu.org/licenses/>#}
+
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+    <div class="col-md-4 col-centered">
+        {% if success_message %}
+            <div class="alert alert-success">
+                <strong>{{ success_message }}</strong>
+            </div>
+        {% endif %}
+
+        {#Card#}
+        <div class="card">
+
+            {#Card image#}
+            <div class="view overlay hm-white-slight">
+                <img src="{{ user.profile.picture }}"
+                     class="img-fluid" alt="">
+            </div>
+            {#/.Card image#}
+
+            {#Card content#}
+            <div class="card-block">
+                {#Name#}
+                <h4 class="card-title">{{ user.first_name }} {{ user.last_name }}</h4>
+                <hr>
+                {#Username#}
+                <p class="card-text">{{ user.username }}</p>
+                {#Email#}
+                <p class="card-text"><a
+                        href="mailto:{{ user.first_name }} {{ user.last_name }} <{{ user.email }}>">{{ user.email }}</a>
+                </p>
+                {#Address#}
+                <p class="card-text">{{ user.profile.street_address }}<br/>{{ user.profile.city }}, {{ user.profile.state }}. {{ user.profile.zip }}
+                </p>
+                <a href="/profile/edit/" class="btn dark-primary-color ">Edit</a>
+            </div>
+            {#/.Card content#}
+
+        </div>
+    </div>
+{% endblock %}

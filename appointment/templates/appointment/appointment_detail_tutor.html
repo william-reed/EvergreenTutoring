@@ -1,0 +1,76 @@
+{#Evergreen Tutoring - A simple online tutor scheduling service#}
+{#Copyright (C) 2017 William Reed#}
+{##}
+{#This program is free software: you can redistribute it and/or modify#}
+{#it under the terms of the GNU General Public License as published by#}
+{#the Free Software Foundation, either version 3 of the License, or#}
+{#(at your option) any later version.#}
+{##}
+{#This program is distributed in the hope that it will be useful,#}
+{#but WITHOUT ANY WARRANTY; without even the implied warranty of#}
+{#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the#}
+{#GNU General Public License for more details.#}
+{##}
+{#You should have received a copy of the GNU General Public License#}
+{#along with this program.  If not, see <http://www.gnu.org/licenses/>#}
+
+{% extends 'base.html' %}
+{% block title %}Appointments{% endblock %}
+{% block content %}
+    <div class="container">
+        <h2>Appointment Overview</h2>
+        <h4>Owner View</h4>
+        {% if success_message %}
+            <div class="alert alert-success">
+                <strong>{{ success_message }}</strong>
+            </div>
+        {% endif %}
+        <hr>
+
+        <div class="row">
+            <div class="col-md-4 col-sm-1">
+                {# student info card #}
+                <div class="card">
+                    <div class="card-block">
+                        <h4 class="card-title">Student</h4>
+                        {% if appointment.user %}
+                            <img class="img-fluid rounded"
+                                 src="{{ appointment.user.profile.picture }}"
+                                 alt="{{ appointment.user.name }} picture">
+                            <hr>
+                            <p class="card-text">{{ appointment.user.profile.name }}</p>
+                        {% else %}
+                            <hr>
+                            <p>No student request yet.</p>
+                        {% endif %}
+
+                        {% if appointment.status == 'REQUESTED' %}
+                            <form method="post">
+                                {% csrf_token %}
+                                <button name="accept" value="accept" class="btn dark-primary-color">Accept</button>
+                                <button name="decline" value="decline" class="btn dark-primary-color">Decline</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <br>
+                {# Information Card #}
+                {% include 'appointment/appointment_information_card.html' %}
+
+
+            </div>
+
+            {# TODO: Ensure this site is a public site OR this is allowed by google license OR buy license #}
+            {# map col #}
+            <div class="col-md-8 col-sm-1">
+                {% include 'appointment/appointment_location_map_card.html' %}
+            </div>
+
+
+            {# modal for cancelling appointment #}
+            {% include 'appointment/appointment_cancel_modal.html' %}
+
+
+        </div>
+{% endblock %}

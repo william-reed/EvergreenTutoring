@@ -1,0 +1,32 @@
+{#Evergreen Tutoring - A simple online tutor scheduling service#}
+{#Copyright (C) 2017 William Reed#}
+{##}
+{#This program is free software: you can redistribute it and/or modify#}
+{#it under the terms of the GNU General Public License as published by#}
+{#the Free Software Foundation, either version 3 of the License, or#}
+{#(at your option) any later version.#}
+{##}
+{#This program is distributed in the hope that it will be useful,#}
+{#but WITHOUT ANY WARRANTY; without even the implied warranty of#}
+{#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the#}
+{#GNU General Public License for more details.#}
+{##}
+{#You should have received a copy of the GNU General Public License#}
+{#along with this program.  If not, see <http://www.gnu.org/licenses/>#}
+
+<div class="card">
+    <div class="card-block">
+        <h4 class="card-title">{{ notification.1.subject }}
+            {% if not notification.0.read_by_user %}
+                <span class="badge dark-primary-color">New</span>
+            {% endif %}
+        </h4>
+        <hr>
+        {# only server sends messages so this should be good #}
+        {% autoescape off %}
+            <p class="card-text">{{ notification.1.message|linebreaks }}</p>
+        {% endautoescape %}
+        <p class="card-text">from <strong>{{ notification.1.author }}</strong> on
+            {{ notification.1.time_stamp }}</p>
+    </div>
+</div>

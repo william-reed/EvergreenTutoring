@@ -1,0 +1,43 @@
+{#Evergreen Tutoring - A simple online tutor scheduling service#}
+{#Copyright (C) 2017 William Reed#}
+{##}
+{#This program is free software: you can redistribute it and/or modify#}
+{#it under the terms of the GNU General Public License as published by#}
+{#the Free Software Foundation, either version 3 of the License, or#}
+{#(at your option) any later version.#}
+{##}
+{#This program is distributed in the hope that it will be useful,#}
+{#but WITHOUT ANY WARRANTY; without even the implied warranty of#}
+{#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the#}
+{#GNU General Public License for more details.#}
+{##}
+{#You should have received a copy of the GNU General Public License#}
+{#along with this program.  If not, see <http://www.gnu.org/licenses/>#}
+
+{% extends 'base.html' %}
+{% block title %}Tutors{% endblock %}
+
+{# for each tutor make a card view. limit to 4 per row #}
+{% block content %}
+    <div class="container">
+        <h2>Tutors</h2>
+        <hr>
+        <br>
+        <div class="row">
+            {% for tutor in object_list %}
+                <div class="col-sm-3">
+                    {% include 'tutor/tutor_overview_card.html' %}
+                </div>
+                {# end the row div if the counter is at its max #}
+                {% if object_list|length == forloop.counter %}
+                    </div>
+                    {# if this row has 4 elements, start a new row by ending the row div and starting a new one #}
+                {% elif forloop.counter|divisibleby:4 %}
+                    </div>
+                    <br>
+                    <div class="row">
+                {% endif %}
+            {% endfor %}
+            </div>
+    </div>
+{% endblock %}

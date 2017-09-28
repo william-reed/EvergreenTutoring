@@ -1,0 +1,69 @@
+{#Evergreen Tutoring - A simple online tutor scheduling service#}
+{#Copyright (C) 2017 William Reed#}
+{##}
+{#This program is free software: you can redistribute it and/or modify#}
+{#it under the terms of the GNU General Public License as published by#}
+{#the Free Software Foundation, either version 3 of the License, or#}
+{#(at your option) any later version.#}
+{##}
+{#This program is distributed in the hope that it will be useful,#}
+{#but WITHOUT ANY WARRANTY; without even the implied warranty of#}
+{#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the#}
+{#GNU General Public License for more details.#}
+{##}
+{#You should have received a copy of the GNU General Public License#}
+{#along with this program.  If not, see <http://www.gnu.org/licenses/>#}
+
+{% extends 'base.html' %}
+{% block title %}Send Notification{% endblock %}
+{% block content %}
+    <div class="container">
+        <h2>Send a Notification</h2>
+        {% if success_message %}
+            <div class="alert alert-success">
+                <strong>{{ success_message }}</strong>
+            </div>
+        {% endif %}
+        <hr>
+        <div class="col-md-6 col-centered">
+            <div class="card">
+                <div class="card-block">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        {# Subject text-box #}
+                        <div class="md-form">
+                            <input name="subject" type="text" id="id_subject"
+                                   class="form-control" maxlength="50" required>
+                            <label for="id_subject">Subject</label>
+                        </div>
+
+                        {# Message text-area #}
+                        <div class="md-form">
+                            <textarea required type="text" name="message" id="id_message" class="md-textarea"
+                                      maxlength="500"></textarea>
+                            <label for="id_message">Message</label>
+                        </div>
+
+                        {# Author #}
+                        <div class="md-form">
+                            <input name="author" type="text" id="id_author"
+                                   class="form-control" maxlength="30" value="Evergreen Team" required>
+                            <label for="id_author">Author</label>
+                        </div>
+
+                        {# Channel radio buttons #}
+                        <input type="radio" name="channel" value="ALL" required> Everyone<br>
+                        <input type="radio" name="channel" value="TUTORS"> Tutors<br>
+                        <input type="radio" name="channel" value="STAFF"> Staff
+
+                        <div class="text-center">
+                            <button class="btn dark-primary-color" type="submit">Submit</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{#Evergreen Tutoring - A simple online tutor scheduling service#}
+{#Copyright (C) 2017 William Reed#}
+{##}
+{#This program is free software: you can redistribute it and/or modify#}
+{#it under the terms of the GNU General Public License as published by#}
+{#the Free Software Foundation, either version 3 of the License, or#}
+{#(at your option) any later version.#}
+{##}
+{#This program is distributed in the hope that it will be useful,#}
+{#but WITHOUT ANY WARRANTY; without even the implied warranty of#}
+{#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the#}
+{#GNU General Public License for more details.#}
+{##}
+{#You should have received a copy of the GNU General Public License#}
+{#along with this program.  If not, see <http://www.gnu.org/licenses/>#}
+
+{# Overview card for the listview of tutors #}
+
+<div class="card">
+
+    {#Card image#}
+
+    <div class="view overlay hm-white-slight">
+        <img
+                class="img-fluid"
+                src="{{ tutor.user.profile.picture }}"
+                alt="{{ tutor.user.name }} picture">
+        <a href="{% url 'tutor:detail' tutor.id %}">
+            <div class="mask waves-effect waves-light"></div>
+        </a>
+    </div>
+    {#/.Card image#}
+
+    {# Card content #}
+    <div class="card-block">
+        {#Title#}
+        <a href="{% url 'tutor:detail' tutor.id %}"><h4 class="card-title">{{ tutor.user.profile.name }}</h4></a>
+        {#Text#}
+        <p class="card-text">
+            {# Rating #}
+            {{ tutor.rating }} ★</br>
+            {# Uses #}
+            {{ tutor.sessions }} sessions</br>
+            {# Specialty Subjects #}
+            {% for subject in tutor.subjects %}
+                {{ subject }}
+                {# add a comma if they do more than one subject #}
+                {% if forloop.counter != tutor.subjects|length %},{% endif %}
+            {% endfor %}
+        </p>
+    </div>
+    {#/.Card content#}
+
+</div>

@@ -1,0 +1,50 @@
+{#Evergreen Tutoring - A simple online tutor scheduling service#}
+{#Copyright (C) 2017 William Reed#}
+{##}
+{#This program is free software: you can redistribute it and/or modify#}
+{#it under the terms of the GNU General Public License as published by#}
+{#the Free Software Foundation, either version 3 of the License, or#}
+{#(at your option) any later version.#}
+{##}
+{#This program is distributed in the hope that it will be useful,#}
+{#but WITHOUT ANY WARRANTY; without even the implied warranty of#}
+{#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the#}
+{#GNU General Public License for more details.#}
+{##}
+{#You should have received a copy of the GNU General Public License#}
+{#along with this program.  If not, see <http://www.gnu.org/licenses/>#}
+
+{% extends 'base.html' %}
+{% block title %}Appointments{% endblock %}
+{% block content %}
+    <div class="container">
+        <h2>Appointment Overview</h2>
+        {% if success_message %}
+            <div class="alert alert-success">
+                <strong>{{ success_message }}</strong>
+            </div>
+        {% endif %}
+        <hr>
+
+        <div class="row">
+            <div class="col-4">
+                {% with tutor=appointment.tutor %}
+                    {% include 'tutor/tutor_overview_card.html' %}
+                {% endwith %}
+
+                <br>
+                {# Information Card #}
+                {% include 'appointment/appointment_information_card.html' %}
+            </div>
+
+            {# TODO: Ensure this site is a public site OR this is allowed by google license OR buy license #}
+            {# map col #}
+            <div class="col-md-8 col-sm-1">
+                {% include 'appointment/appointment_location_map_card.html' %}
+            </div>
+        </div>
+
+        {# modal for cancelling appointment #}
+        {% include 'appointment/appointment_cancel_modal.html' %}
+    </div>
+{% endblock %}

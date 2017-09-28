@@ -1,0 +1,48 @@
+{#Evergreen Tutoring - A simple online tutor scheduling service#}
+{#Copyright (C) 2017 William Reed#}
+{##}
+{#This program is free software: you can redistribute it and/or modify#}
+{#it under the terms of the GNU General Public License as published by#}
+{#the Free Software Foundation, either version 3 of the License, or#}
+{#(at your option) any later version.#}
+{##}
+{#This program is distributed in the hope that it will be useful,#}
+{#but WITHOUT ANY WARRANTY; without even the implied warranty of#}
+{#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the#}
+{#GNU General Public License for more details.#}
+{##}
+{#You should have received a copy of the GNU General Public License#}
+{#along with this program.  If not, see <http://www.gnu.org/licenses/>#}
+
+{% extends 'base.html' %}
+{% block title %}Appointments{% endblock %}
+{% block content %}
+    <div class="container">
+        <h2>Appointments</h2>
+        <br>
+        {% if object_list %}
+            <table class="table table-hover">
+                <thead>
+
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Rate</th>
+                    <th>Details</th>
+                </tr>
+                </thead>
+                <tbody>
+                {# TODO: make sure these are all gucci #}
+                {% for app in object_list %}
+                    {% block table_values %}
+                    {% endblock %}
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>You do not have any appointments.</p>
+        {% endif %}
+    </div>
+
+{% endblock %}

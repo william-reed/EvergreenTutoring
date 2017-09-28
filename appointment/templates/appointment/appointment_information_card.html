@@ -1,0 +1,54 @@
+{#Evergreen Tutoring - A simple online tutor scheduling service#}
+{#Copyright (C) 2017 William Reed#}
+{##}
+{#This program is free software: you can redistribute it and/or modify#}
+{#it under the terms of the GNU General Public License as published by#}
+{#the Free Software Foundation, either version 3 of the License, or#}
+{#(at your option) any later version.#}
+{##}
+{#This program is distributed in the hope that it will be useful,#}
+{#but WITHOUT ANY WARRANTY; without even the implied warranty of#}
+{#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the#}
+{#GNU General Public License for more details.#}
+{##}
+{#You should have received a copy of the GNU General Public License#}
+{#along with this program.  If not, see <http://www.gnu.org/licenses/>#}
+
+<div class="card">
+    <div class="card-block">
+        <h4 class="card-title">Information <span
+                class="badge dark-primary-color">{{ appointment.get_status_display }}</span></h4>
+        <hr>
+        <div class="row">
+            <div class="col-4 col-md-auto">
+                Date<br>
+                Time<br>
+                Location<br>
+                Cost<br>
+            </div>
+            <div class="col">
+                {{ appointment.start_time|date }}<br>
+                {{ appointment.start_time|time }} - {{ appointment.end_time|time }}<br>
+                {% if appointment.location_option == 'USER_ADDRESS' %}
+                    Students Address
+                {% elif appointment.location_option == 'TUTOR_ADDRESS' %}
+                    Tutors Address
+                {% else %}
+                    {{ appointment.location }}
+                {% endif %}
+                <br>
+                ${{ appointment.cost|floatformat:2 }}<br>
+            </div>
+        </div>
+        <br>
+        <p>User Comments:<br>{{ appointment.user_comments|linebreaks }}</p>
+        <p>Tutor Comments:<br>{{ appointment.tutor_comments|linebreaks }}</p>
+        <button name="cancel" class="btn danger-color-dark" data-toggle="modal"
+                data-target="#cancelModal"
+                {% if appointment.status == "COMPLETED" or appointment.status == "CANCELED" or appointment.status == "EXPIRED" %}
+                disabled
+                {% endif %}
+        >Cancel
+        </button>
+    </div>
+</div>

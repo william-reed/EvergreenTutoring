@@ -1,0 +1,82 @@
+{#Evergreen Tutoring - A simple online tutor scheduling service#}
+{#Copyright (C) 2017 William Reed#}
+{##}
+{#This program is free software: you can redistribute it and/or modify#}
+{#it under the terms of the GNU General Public License as published by#}
+{#the Free Software Foundation, either version 3 of the License, or#}
+{#(at your option) any later version.#}
+{##}
+{#This program is distributed in the hope that it will be useful,#}
+{#but WITHOUT ANY WARRANTY; without even the implied warranty of#}
+{#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the#}
+{#GNU General Public License for more details.#}
+{##}
+{#You should have received a copy of the GNU General Public License#}
+{#along with this program.  If not, see <http://www.gnu.org/licenses/>#}
+
+{% extends 'base.html' %}
+{% block title %}Review{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="col-md-5 col-centered">
+            <div class="text-center">
+                <h3><i class="fa fa-star"></i> Review for {{ tutor.user.profile.name }}</h3>
+                <hr class="mt-2 mb-2">
+            </div>
+            <form method="post">
+                {% csrf_token %}
+
+                {# rating #}
+                {# TODO: replace with star rating #}
+                <div class="form-group">
+                    {{ review_form.rating.label_tag }}
+                    {{ review_form.rating }}
+                    {% if review_form.rating.errors %}
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <span class="text-danger small">{{ review_form.rating.errors }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {# Review text #}
+                <div class="form-group">
+                    {{ review_form.text.label_tag }}
+                    {{ review_form.text }}
+                    <h6 class="pull-right" id="id_char_count">char counter</h6>
+                    {% if review_form.text.errors %}
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <span class="text-danger small">{{ review_form.text.errors }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {# anonymous #}
+                <div class="form-group">
+                    {{ review_form.anonymous.label_tag }}
+                    {{ review_form.anonymous }}
+                    {% if review_form.anonymous.errors %}
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <span class="text-danger small">{{ review_form.anonymous.errors }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {# submit button #}
+                <div class="text-center">
+                    <button type="submit" class="btn dark-primary-color">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {% load staticfiles %}
+    {# char count #}
+    <script language="JavaScript" type="text/javascript" src="{% static 'js/char-counter.js' %}"></script>
+    <script language="JavaScript" type="text/javascript">
+        $('#id_char_count').charCount({
+            textAreaId: 'id_text'
+        });
+    </script>
+{% endblock %}

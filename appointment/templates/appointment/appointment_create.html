@@ -1,0 +1,163 @@
+{#Evergreen Tutoring - A simple online tutor scheduling service#}
+{#Copyright (C) 2017 William Reed#}
+{##}
+{#This program is free software: you can redistribute it and/or modify#}
+{#it under the terms of the GNU General Public License as published by#}
+{#the Free Software Foundation, either version 3 of the License, or#}
+{#(at your option) any later version.#}
+{##}
+{#This program is distributed in the hope that it will be useful,#}
+{#but WITHOUT ANY WARRANTY; without even the implied warranty of#}
+{#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the#}
+{#GNU General Public License for more details.#}
+{##}
+{#You should have received a copy of the GNU General Public License#}
+{#along with this program.  If not, see <http://www.gnu.org/licenses/>#}
+
+{% extends 'base.html' %}
+{% block title %}Appointments{% endblock %}
+{% block content %}
+    <div class="container">
+        <h2>Create Appointment Availability</h2>
+        {% if success_message %}
+            <div class="alert alert-success">
+                <strong>{{ success_message }}</strong>
+            </div>
+        {% elif error_message %}
+            <div class="alert alert-danger">
+                <strong>{{ error_message }}</strong>
+            </div>
+        {% endif %}
+        <hr>
+        <div class="col-6 col-centered">
+            <div class="card">
+                <div class="card-block">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="row" id="dateTimePicker">
+                            <div class="form-group col-4">
+                                {{ availability_form.date }}
+                                <label for="id_date">Date</label>
+                                {% if availability_form.date.errors %}
+                                    <span class="text-danger small">{{ availability_form.date.errors }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="form-group col-4">
+                                {{ availability_form.start_time }}
+                                <label for="id_start_time">Start Time</label>
+                                {% if availability_form.start_time.errors %}
+                                    <span class="text-danger small">{{ availability_form.start_time.errors }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="form-group col-4">
+                                {{ availability_form.end_time }}
+                                <label for="id_end_time">End Time</label>
+                                {% if availability_form.end_time.errors %}
+                                    <span class="text-danger small">{{ availability_form.end_time.errors }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+
+                        {# location choices #}
+                        <div class="form-group">
+                            {{ availability_form.location_choice }}
+                            {% if availability_form.location_choice.errors %}
+                                <div class="col-sm-offset-3 col-sm-10">
+                                    <span class="text-danger small">{{ availability_form.location_choice.errors }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            {{ availability_form.tutor_comments }}
+                            <label for="id_tutor_comments">Additional Comments</label>
+                            {% if availability_form.tutor_comments.errors %}
+                                <div class="col-sm-offset-3 col-sm-10">
+                                    <span class="text-danger small">{{ availability_form.tutor_comments.errors }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="text-center">
+                            <button class="btn dark-primary-color" type="submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{# scripts and stuff for the date / time picker #}
+{% block scripts %}
+
+    {# TODO: must comply with MIT license for timepicker stuff and Apache for bootstrap-datepicker #}
+    {# any licenses on bootstrap? #}
+
+    <!-- include input widgets; this is independent of Datepair.js -->
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.css"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css"/>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
+    {# maybe switch this to min version #}
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.js"></script>
+
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/datepair.js/0.4.15/datepair.min.js"></script>
+    <script type="text/javascript" language="JavaScript">
+
+        {# Setup the proper settings for the time picker stuff #}
+        $('#dateTimePicker .time').timepicker({
+            'minTime': '7:00am',
+            'maxTime': '11:00pm',
+            'step': 15,
+            'timeFormat': 'g:ia',
+            'disableTextInput': true
+        }).on('blur', function (e) {
+            var milliseconds = datepair.getTimeDiff();
+            //$('#timeEnd').timepicker('getTime')
+            var THREE_HOURS = 10800000;
+
+            if (milliseconds > THREE_HOURS) {
+                $('#id_time_end').timepicker('setTime', new Date($('#id_time_start').timepicker('getTime').getTime() + THREE_HOURS));
+                datepair.refresh();
+            }
+        });
+
+        $('#dateTimePicker .date').datepicker({
+            'format': 'm/d/yyyy',
+            'autoclose': true
+        });
+
+        // initialize datepair
+        var dateTimePicker = document.getElementById('dateTimePicker');
+        var datepair = new Datepair(dateTimePicker);
+
+    </script>
+
+    {# script for other box #}
+    <script type="text/javascript" language="JavaScript">
+        var radioDiv = $('#id_location_choice')
+        var otherRadioButton = $('#id_location_choice_2')
+        radioDiv.change(function () {
+            if (otherRadioButton.prop('checked')) {
+                radioDiv.after('<input type="text" id="id_other_location" name="other_location" ' +
+                    'placeholder="Other Location. Ex: Bohemia Public Library" required></input>');
+            } else {
+                {# make sure it exists before removing it #}
+                var otherLocationInput = $('#id_other_location')
+                if (otherLocationInput.length > 0) {
+                    otherLocationInput.remove()
+                }
+            }
+        });
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,125 @@
+{#Evergreen Tutoring - A simple online tutor scheduling service#}
+{#Copyright (C) 2017 William Reed#}
+{##}
+{#This program is free software: you can redistribute it and/or modify#}
+{#it under the terms of the GNU General Public License as published by#}
+{#the Free Software Foundation, either version 3 of the License, or#}
+{#(at your option) any later version.#}
+{##}
+{#This program is distributed in the hope that it will be useful,#}
+{#but WITHOUT ANY WARRANTY; without even the implied warranty of#}
+{#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the#}
+{#GNU General Public License for more details.#}
+{##}
+{#You should have received a copy of the GNU General Public License#}
+{#along with this program.  If not, see <http://www.gnu.org/licenses/>#}
+
+{% extends 'base.html' %}
+{% block title %}{{ name }}{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="col-md-8 col-centered">
+            <div class="text-center">
+                <h3><i class="fa fa-user"></i> {{ name }}</h3>
+                <hr class="mt-2 mb-2">
+            </div>
+            <form method="post">
+                {% csrf_token %}
+
+                {# Rate #}
+                <div class="form-group">
+                    <label for="id_rate">Rate</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">$</span>
+                        <div class="col-3 no-padding">
+                            {{ tutor_form.rate }}
+                        </div>
+                        {# errors if their are any #}
+                    </div>
+                    <div class="col-sm-offset-3 col-sm-10">
+                        <span class="text-danger small">{{ tutor_form.rate.errors }}</span>
+                    </div>
+                </div>
+
+                {# Bio text area #}
+                <div class="form-group">
+                    <label for="id_bio">Biography</label>
+                    {{ tutor_form.bio }}
+                    <h6 class="pull-right" id="id_char_count"></h6>
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <span class="text-danger small">{{ tutor_form.bio.errors }}</span>
+                    </div>
+                </div>
+
+                {# Subjects #}
+                {{ subject_formset.management_form }}
+
+                <label>Subjects: </label>
+
+                {% for subject_form in subject_formset %}
+                    {% for field in subject_form %}
+                        <div class="subject_formset">
+                            <div class="col-6 no-padding">
+                                <div class="input-group form-group">
+                                    {{ field }}
+                                    <a class="input-group-addon fa fa-trash delete-row" onclick></a>
+                                </div>
+                            </div>
+                            <div class="col-sm-offset-3 col-sm-10">
+                                <span class="text-danger small">{{ field.errors }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+
+
+                {# submit button #}
+                <div class="text-center">
+                    <button type="submit" class="btn dark-primary-color">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block scripts %}
+    {% load staticfiles %}
+    <script language="JavaScript" type="text/javascript" src="{% static 'js/jquery.formset.js' %}"></script>
+    <script language="JavaScript" type="text/javascript" src="{% static 'js/char-counter.js' %}"></script>
+
+    {# formset and subject stuff #}
+    <script language="JavaScript" type="text/javascript">
+        {# Set up the formset #}
+        $('.subject_formset').formset({
+            customDelete: true,
+            added: addSubjectTextBox
+        });
+
+        {# random subjects to use for place holders  #}
+        var subject = ["Algebra", "English", "World History", "Art", "Music Composition",
+            "Computer Programming", "Trigonometry", "Calculus", "Pre-Calculus", "SAT", "ACT", "Biology",
+            "Earth Science", "Health", "Chemistry", "Physics"];
+
+        {# set a random placeholder example subject #}
+        function addSubjectTextBox(row) {
+            // delete icon should only appear when there is more than one
+            // change the id on this
+            row.find("input").attr("placeholder", subject[Math.floor(Math.random() * subject.length)]);
+        }
+
+        {# TODO: does this need to be put in a document.ready type of thing or is ok to do like this #}
+        {# hide delete button on form loading so you cant delete it when there is only one #}
+        {% if subject_formset|length <= 1 %}
+            $('a.delete-row').hide();
+        {% endif %}
+    </script>
+
+    {# handle character counter #}
+    <script language="JavaScript" type="text/javascript">
+        $('#id_char_count').charCount({
+            textAreaId: 'id_bio'
+        });
+    </script>
+{% endblock %}

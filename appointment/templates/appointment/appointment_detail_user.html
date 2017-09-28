@@ -1,0 +1,94 @@
+{#Evergreen Tutoring - A simple online tutor scheduling service#}
+{#Copyright (C) 2017 William Reed#}
+{##}
+{#This program is free software: you can redistribute it and/or modify#}
+{#it under the terms of the GNU General Public License as published by#}
+{#the Free Software Foundation, either version 3 of the License, or#}
+{#(at your option) any later version.#}
+{##}
+{#This program is distributed in the hope that it will be useful,#}
+{#but WITHOUT ANY WARRANTY; without even the implied warranty of#}
+{#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the#}
+{#GNU General Public License for more details.#}
+{##}
+{#You should have received a copy of the GNU General Public License#}
+{#along with this program.  If not, see <http://www.gnu.org/licenses/>#}
+
+{% extends 'base.html' %}
+{% block title %}Appointments{% endblock %}
+{% block content %}
+    <div class="container">
+        <h2>Appointment Overview</h2>
+        {% if success_message %}
+            <div class="alert alert-success">
+                <strong>{{ success_message }}</strong>
+            </div>
+        {% endif %}
+        <hr>
+
+        <div class="row">
+            <div class="col-4">
+                {% with tutor=appointment.tutor %}
+                    {% include 'tutor/tutor_overview_card.html' %}
+                {% endwith %}
+            </div>
+
+            <div class="col">
+                <div class="card card-flex">
+                    <div class="card-block card-block-flex">
+                        <h4 class="card-title">Appointment Information <span
+                                class="badge dark-primary-color">{{ appointment.get_status_display }}</span></h4>
+
+                        <hr class="hr-flex">
+                        {# TODO: should i use a table? #}
+                        <div class="row">
+                            <div class="col-4 col-md-auto">
+                                <p class="card-text">
+                                    Date<br>
+                                    Time<br>
+                                    Location<br>
+                                    Cost<br>
+                                    Additional Comments<br>
+                                </p>
+                            </div>
+                            <div class="col">
+                                {{ appointment.start_time|date }}<br>
+                                {{ appointment.start_time|time }} - {{ appointment.end_time|time }}<br>
+                                {% if appointment.location_option == 'USER_ADDRESS' %}
+                                    Students Address
+                                {% elif appointment.location_option == 'TUTOR_ADDRESS' %}
+                                    Tutors Address
+                                {% else %}
+                                    {{ appointment.location }}
+                                {% endif %}
+                                <br>
+                                ${{ appointment.cost|floatformat:2 }}
+                                <br>
+                                {{ appointment.tutor_comments|linebreaks }}
+                            </div>
+                        </div>
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <br>
+                            <div class="md-form">
+                            <textarea type="text" name="user_comments" id="id_user_comments"
+                                      class="md-textarea"
+                                      maxlength="500"></textarea>
+                                <label for="id_user_comments">Additional Comments</label>
+                            </div>
+                            <button class="btn dark-primary-color disabled-hover" type="submit" name="request"
+                                    value="request"
+                                    {% if not appointment.status == 'OPEN' %}
+                                    disabled
+                                    title="The appointment is not available to request."
+                                    {% endif %} >Request Appointment
+                            </button>
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

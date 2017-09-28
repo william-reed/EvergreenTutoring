@@ -1,0 +1,82 @@
+{#Evergreen Tutoring - A simple online tutor scheduling service#}
+{#Copyright (C) 2017 William Reed#}
+{##}
+{#This program is free software: you can redistribute it and/or modify#}
+{#it under the terms of the GNU General Public License as published by#}
+{#the Free Software Foundation, either version 3 of the License, or#}
+{#(at your option) any later version.#}
+{##}
+{#This program is distributed in the hope that it will be useful,#}
+{#but WITHOUT ANY WARRANTY; without even the implied warranty of#}
+{#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the#}
+{#GNU General Public License for more details.#}
+{##}
+{#You should have received a copy of the GNU General Public License#}
+{#along with this program.  If not, see <http://www.gnu.org/licenses/>#}
+
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-3 col-centered">
+            <!--Form with header-->
+            <div class="card">
+                <div class="card-block">
+
+                    <!--Header-->
+                    <div class="form-header dark-primary-color">
+                        <h3><i class="fa fa-lock"></i> Login:</h3>
+                    </div>
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <strong>{{ form.non_field_errors }}</strong>
+                        </div>
+                        <br>
+                    {% elif success_message %}
+                        <div class="alert alert-success">
+                            <strong>{{ success_message }}</strong>
+                        </div>
+                        <br>
+                    {% elif error_message %}
+                        <div class="alert alert-danger">
+                            <strong>{{ error_message }}</strong>
+                        </div>
+                        <br>
+                    {% endif %}
+
+                    <!--Body-->
+                    <form method="post" action="{% url 'profile:login' %}">
+                        {% csrf_token %}
+                        <div class="md-form">
+                            <i class="fa fa-envelope prefix"></i>
+                            {{ form.username }}
+                            <label for="id_password">Your username</label>
+                        </div>
+                        {{ form.username.errors }}
+
+                        <div class="md-form">
+                            <i class="fa fa-lock prefix"></i>
+                            {{ form.password }}
+                            <label for="id_password">Your password</label>
+                        </div>
+                        {{ form.password.errors }}
+
+                        <div class="text-center">
+                            <button class="btn dark-primary-color" type="submit">Login</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!--Footer-->
+                <div class="modal-footer">
+                    <div class="options">
+                        <p>Not a member? <a href="/profile/register/">Sign Up</a></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--/Form with header-->
+{% endblock %}

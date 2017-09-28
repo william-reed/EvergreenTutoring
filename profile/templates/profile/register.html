@@ -1,0 +1,70 @@
+{#Evergreen Tutoring - A simple online tutor scheduling service#}
+{#Copyright (C) 2017 William Reed#}
+{##}
+{#This program is free software: you can redistribute it and/or modify#}
+{#it under the terms of the GNU General Public License as published by#}
+{#the Free Software Foundation, either version 3 of the License, or#}
+{#(at your option) any later version.#}
+{##}
+{#This program is distributed in the hope that it will be useful,#}
+{#but WITHOUT ANY WARRANTY; without even the implied warranty of#}
+{#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the#}
+{#GNU General Public License for more details.#}
+{##}
+{#You should have received a copy of the GNU General Public License#}
+{#along with this program.  If not, see <http://www.gnu.org/licenses/>#}
+
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="col-md-5 col-centered">
+            <div class="text-center">
+                {# Registration title. #}
+                <h3><i class="fa fa-users"></i> Register</h3>
+                <hr class="mt-2 mb-2">
+            </div>
+
+            {# Register forms #}
+            <form method="post">
+                {% csrf_token %}
+                {# everything from stock user #}
+                {% for field in user_form %}
+                    <div class="form-group">
+                        {# label #}
+                        <label>{{ field.label_tag }}</label>
+                        {# the actual field #}
+                        <div>{{ field }}</div>
+                        {# errors if their are any #}
+                        {% if field.errors %}
+                            <div class="col-sm-offset-3 col-sm-10">
+                                <span class="text-danger small">{{ field.errors }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                {#  everything for my user #}
+                {% for field in profile_form %}
+                    <div class="form-group">
+                        {# label #}
+                        <label>{{ field.label_tag }}</label>
+                        {# the actual field #}
+                        <div>{{ field }}</div>
+                        {# errors if their are any #}
+                        {% if field.errors %}
+                            <div class="col-sm-offset-3 col-sm-10">
+                                <span class="text-danger small">{{ field.errors }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+
+                {# submit button #}
+                <div class="text-center">
+                    <button type="submit" class="btn dark-primary-color">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
